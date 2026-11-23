@@ -1,0 +1,139 @@
+// Esquema de datos de EFX — fondo de trading cuantitativo.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+enum Role {
+  INVESTOR
+  ANALYST
+  ADMIN
+}
+
+enum Plan {
+  FREE
+  ANALYST
+  PRO
+  INSTITUTIONAL
+}
+
+enum StrategyStatus {
+  RESEARCH
+  PAPER
+  LIVE
+  RETIRED
+}
+
+enum Side {
+  BUY
+  SELL
+}
+
+model User {
+  id                     String       @id @default(cuid())
+  clerkId                String       @unique
+  email                  String       @unique
+  name                   String?
+  role                   Role         @default(INVESTOR)
+  plan                   Plan         @default(FREE)
+  stripeCustomerId       String?      @unique
+  stripeSubscriptionId   String?      @unique
+  stripePriceId          String?
+  stripeCurrentPeriodEnd DateTime?
+  kycVerified            Boolean      @default(false)
+  createdAt              DateTime     @default(now())
+  updatedAt              DateTime     @updatedAt
+  allocations            Allocation[]
+  backtests              BacktestRun[]
+  strategies             Strategy[]
+}
+
+model Fund {
+  id          String        @id @default(cuid())
+  name        String
+  slug        String        @unique
+  baseCcy     String        @default("USD")
+  aum         Decimal       @db.Decimal(20, 2)
+  inception   DateTime
+  createdAt   DateTime      @default(now())
+  strategies  Strategy[]
+  snapshots   NavSnapshot[]
+  allocations Allocation[]
+}
+
+model Strategy {
+  id          String         @id @default(cuid())
+  fundId      String
+  ownerId     String?
+  engineId    String // id del motor en @efx/quant (p. ej. "sma-crossover")
+  name        String
+  symbol      String
+  status      StrategyStatus @default(RESEARCH)
+  weight      Float          @default(0) // peso en el fondo [0,1]
+  params      Json
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  fund        Fund           @relation(fields: [fundId], references: [id], onDelete: Cascade)
+  owner       User?          @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  backtests   BacktestRun[]
+  trades      Trade[]
+
+  @@index([fundId, status])
+}
+
+model BacktestRun {
+  id         String   @id @default(cuid())
+  strategyId String?
+  userId     String
+  engineId   String
+  params     Json
+  config     Json
+  metrics    Json
+  createdAt  DateTime @default(now())
+  strategy   Strategy? @relation(fields: [strategyId], references: [id], onDelete: SetNull)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+}
+
+model Trade {
+  id         String   @id @default(cuid())
+  strategyId String
+  symbol     String
+  side       Side
+  quantity   Decimal  @db.Decimal(20, 6)
+  price      Decimal  @db.Decimal(20, 6)
+  fee        Decimal  @db.Decimal(20, 6)
+  executedAt DateTime
+  strategy   Strategy @relation(fields: [strategyId], references: [id], onDelete: Cascade)
+
+  @@index([strategyId, executedAt])
+}
+
+model NavSnapshot {
+  id       String   @id @default(cuid())
+  fundId   String
+  date     DateTime
+  nav      Decimal  @db.Decimal(20, 6) // valor por participación
+  aum      Decimal  @db.Decimal(20, 2)
+  fund     Fund     @relation(fields: [fundId], references: [id], onDelete: Cascade)
+
+  @@unique([fundId, date])
+}
+
+model Allocation {
+  id        String   @id @default(cuid())
+  userId    String
+  fundId    String
+  units     Decimal  @db.Decimal(20, 6)
+  costBasis Decimal  @db.Decimal(20, 2)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fund      Fund     @relation(fields: [fundId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, fundId])
+}

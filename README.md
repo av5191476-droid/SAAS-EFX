@@ -1,7 +1,3 @@
-# SAAS-EFX
-Sistema SAAS para clientes, monorepo completo, organizado igual que Saasfly.
-
-
 # EFX — Fondo de trading cuantitativo
 
 SaaS para un fondo cuantitativo multiestrategia, construido sobre la arquitectura de
@@ -95,4 +91,3 @@ Proyecto de demostración. Las rentabilidades mostradas proceden de datos sinté
 asesoramiento financiero. Operar un fondo real exige licencias y cumplimiento normativo en tu jurisdicción.
 
 Licencia MIT. Arquitectura inspirada en Saasfly (MIT) de Nextify Limited.
-

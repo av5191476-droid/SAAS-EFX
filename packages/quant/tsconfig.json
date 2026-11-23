@@ -1,0 +1,5 @@
+{
+  "extends": "@efx/tsconfig/base.json",
+  "compilerOptions": { "types": ["bun"] },
+  "include": ["src", "test"]
+}

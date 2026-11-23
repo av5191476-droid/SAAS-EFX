@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: 238 241 244;
+  --surface: 255 255 255;
+  --wash: 228 233 238;
+  --ink: 15 29 46;
+  --muted: 90 107 125;
+  --rule: 213 220 227;
+  --cobalt: 31 79 216;
+  --on-cobalt: 255 255 255;
+  --signal: 214 140 6;
+  --bench: 138 151 166;
+  --positive: 18 128 92;
+  --negative: 194 59 50;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: 13 23 36;
+    --surface: 19 33 52;
+    --wash: 27 44 66;
+    --ink: 228 234 241;
+    --muted: 143 160 179;
+    --rule: 34 52 75;
+    --cobalt: 110 147 255;
+    --on-cobalt: 10 20 40;
+    --signal: 245 176 52;
+    --bench: 110 126 145;
+    --positive: 62 196 146;
+    --negative: 240 110 98;
+    color-scheme: dark;
+  }
+}
+
+body {
+  @apply bg-background font-sans text-foreground antialiased;
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

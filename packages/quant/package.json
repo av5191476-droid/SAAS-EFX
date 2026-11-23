@@ -1,0 +1,19 @@
+{
+  "name": "@efx/quant",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": {
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf .turbo node_modules"
+  },
+  "devDependencies": {
+    "@efx/tsconfig": "workspace:*",
+    "@types/bun": "^1.1.14",
+    "typescript": "^5.7.2"
+  }
+}

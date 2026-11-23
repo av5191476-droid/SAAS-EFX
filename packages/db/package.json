@@ -1,0 +1,26 @@
+{
+  "name": "@efx/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "seed": "bun run prisma/seed.ts",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf .turbo node_modules"
+  },
+  "dependencies": {
+    "@efx/quant": "workspace:*",
+    "@prisma/client": "^6.1.0"
+  },
+  "devDependencies": {
+    "@efx/tsconfig": "workspace:*",
+    "@types/bun": "^1.1.14",
+    "prisma": "^6.1.0",
+    "typescript": "^5.7.2"
+  }
+}

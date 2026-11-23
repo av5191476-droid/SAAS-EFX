@@ -1,0 +1,5 @@
+{
+  "installCommand": "bun install",
+  "buildCommand": "cd ../.. && bun run build --filter=@efx/nextjs",
+  "framework": "nextjs"
+}
